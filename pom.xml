@@ -4,7 +4,6 @@
 
     <groupId>codecrafter47.globaltablist</groupId>
     <artifactId>GlobalTablist</artifactId>
-<<<<<<< HEAD
     <version>1.9-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -13,28 +12,6 @@
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
-=======
-    <version>1.8-SNAPSHOT</version>
-    <packaging>jar</packaging>
-
-    <scm>
-        <developerConnection>scm:git:https://github.com/CodeCrafter47/GlobalTablist</developerConnection>
-        <tag>HEAD</tag>
-    </scm>
-
-    <distributionManagement>
-        <repository>
-            <id>deployment</id>
-            <name>Internal Releases</name>
-            <url>http://nexus.codecrafter47.dyndns.eu/content/repositories/releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>deployment</id>
-            <name>Internal Releases</name>
-            <url>http://nexus.codecrafter47.dyndns.eu/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
->>>>>>> dabd16b2813cdb8df259eb71d0c86d40de7b167a
 
     <repositories>
         <repository>
@@ -52,10 +29,7 @@
     </repositories>
 
     <build>
-<<<<<<< HEAD
         <finalName>GlobalTablist</finalName>
-=======
->>>>>>> dabd16b2813cdb8df259eb71d0c86d40de7b167a
         <resources>
             <resource>
                 <targetPath>.</targetPath>
@@ -66,35 +40,15 @@
                 </includes>
             </resource>
         </resources>
-<<<<<<< HEAD
-=======
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                </configuration>
-            </plugin>
-        </plugins>
->>>>>>> dabd16b2813cdb8df259eb71d0c86d40de7b167a
     </build>
 
     <dependencies>
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-proxy</artifactId>
-<<<<<<< HEAD
             <version>1.9-SNAPSHOT</version>
             <scope>system</scope>
             <systemPath>/opt/msm/src/bungeecord/bootstrap/target/BungeeCord.jar</systemPath>
-=======
-            <version>1.8-SNAPSHOT</version>
-            <type>jar</type>
-            <scope>provided</scope>
->>>>>>> dabd16b2813cdb8df259eb71d0c86d40de7b167a
         </dependency>
         <dependency>
             <groupId>net.cubespace</groupId>
@@ -115,8 +69,4 @@
         </dependency>
     </dependencies>
 
-<<<<<<< HEAD
 </project>
-=======
-</project>
->>>>>>> dabd16b2813cdb8df259eb71d0c86d40de7b167a
