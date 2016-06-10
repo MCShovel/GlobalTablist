@@ -18,9 +18,6 @@
  */
 package codecrafter47.globaltablist;
 
-import com.imaginarycode.minecraft.redisbungee.RedisBungee;
-import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
-import lombok.Getter;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -256,73 +253,6 @@ public class CustomizationHandler implements Listener {
             }
         });
 
-        if (plugin.getProxy().getPluginManager().getPlugin("RedisBungee") != null) {
-            variables.add(new Variable("redis_online", true) {
-
-                int last = 0;
-
-                @Override
-                String getReplacement(ProxiedPlayer player) {
-                    return Integer.toString(last);
-                }
-
-                @Override
-                protected void onCreate() {
-                    super.onCreate();
-                    plugin.getProxy().getScheduler().schedule(plugin, new Runnable() {
-                        @Override
-                        public void run() {
-                            RedisBungeeAPI api = RedisBungee.getApi();
-                            if (api == null) return;
-                            int i = api.getPlayerCount();
-                            if (i != last) {
-                                last = i;
-                                for (Updateable updateable : onChange) {
-                                    for (ProxiedPlayer player : plugin.getProxy().getPlayers()) {
-                                        updateable.update(player);
-                                    }
-                                }
-                            }
-                        }
-                    }, 1000, 1000, TimeUnit.MILLISECONDS);
-                }
-            });
-
-            for (final String serverName : plugin.getProxy().getServers().keySet()) {
-                variables.add(new Variable(String.format("redis_online_%s", serverName), true) {
-
-                    int last = 0;
-
-                    @Override
-                    String getReplacement(ProxiedPlayer player) {
-                        return Integer.toString(last);
-                    }
-
-                    @Override
-                    protected void onCreate() {
-                        super.onCreate();
-                        plugin.getProxy().getScheduler().schedule(plugin, new Runnable() {
-                            @Override
-                            public void run() {
-                                RedisBungeeAPI api = RedisBungee.getApi();
-                                if (api == null) return;
-                                Set<UUID> playersOnServer = api.getPlayersOnServer(serverName);
-                                int i = playersOnServer != null ? playersOnServer.size() : 0;
-                                if (i != last) {
-                                    last = i;
-                                    for (Updateable updateable : onChange) {
-                                        for (ProxiedPlayer player : plugin.getProxy().getPlayers()) {
-                                            updateable.update(player);
-                                        }
-                                    }
-                                }
-                            }
-                        }, 1000, 1000, TimeUnit.MILLISECONDS);
-                    }
-                });
-            }
-        }
-
         for (Variable var : variables) {
             for (Updateable updateable : customText) {
                 if (updateable.contains(var)) {
@@ -337,7 +267,6 @@ public class CustomizationHandler implements Listener {
         private String name;
         protected List<Updateable> onChange = new ArrayList<>();
 
-        @Getter
         private boolean dynamic;
 
         protected Variable(String name) {

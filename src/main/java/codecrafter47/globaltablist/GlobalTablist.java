@@ -18,8 +18,6 @@
  */
 package codecrafter47.globaltablist;
 
-import lombok.Getter;
-import net.cubespace.Yamler.Config.InvalidConfigurationException;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 
@@ -36,14 +34,12 @@ public class GlobalTablist extends Plugin {
     /**
      * Holds an INSTANCE of itself if the plugin is enabled
      */
-    @Getter()
     private static GlobalTablist INSTANCE;
     private CustomizationHandler customizationHandler;
 
     /**
      * provides access to the configuration
      */
-    @Getter
     private MainConfig config;
 
     private final TabListListener listener = new TabListListener(this);
@@ -69,7 +65,7 @@ public class GlobalTablist extends Plugin {
             config = new MainConfig();
             config.init(new File(getDataFolder(), "config.yml"));
             config.save();
-        } catch (InvalidConfigurationException ex) {
+        } catch (Exception ex) {
             getLogger().warning("Unable to load Config");
             getLogger().log(Level.WARNING, null, ex);
             getLogger().info("Disabling Plugin");
@@ -97,4 +93,9 @@ public class GlobalTablist extends Plugin {
     public void onDisable() {
         // let the proxy do this
     }
+
+	public MainConfig getConfig() {
+		// TODO Auto-generated method stub
+		return config;
+	}
 }
