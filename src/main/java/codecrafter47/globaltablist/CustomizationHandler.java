@@ -188,12 +188,20 @@ public class CustomizationHandler implements Listener {
                 plugin.getProxy().getScheduler().schedule(plugin, new Runnable() {
                     @Override
                     public void run() {
-                        int i = ProxyServer.getInstance().getOnlineCount();
+                        int hidden = 0;
+                        int i = 0;//ProxyServer.getInstance().getOnlineCount();
+                        for (ProxiedPlayer player : plugin.getProxy().getPlayers()) {
+                        	i++;
+                        	if (player.hasPermission(plugin.getConfig().hideFromTabListPermission))
+                        		hidden++;
+                        }
+                        i -= hidden;
+                        
                         if (i != last) {
                             last = i;
                             for (Updateable updateable : onChange) {
                                 for (ProxiedPlayer player : plugin.getProxy().getPlayers()) {
-                                    updateable.update(player);
+                                	updateable.update(player);
                                 }
                             }
                         }
@@ -219,15 +227,22 @@ public class CustomizationHandler implements Listener {
                         @Override
                         public void run() {
                             int i = 0;
+                            int hidden = 0;
                             ServerInfo serverInfo = ProxyServer.getInstance().getServerInfo(serverName);
                             if (serverInfo != null) {
-                                i = serverInfo.getPlayers().size();
+                                Collection<ProxiedPlayer> list = serverInfo.getPlayers();
+                            	i = list.size();
+                            	for(ProxiedPlayer p : list) {
+									if (p.hasPermission(plugin.getConfig().hideFromTabListPermission))
+										hidden++;
+                            	}
+                            	i = Math.max(0, i - hidden);
                             }
                             if (i != last) {
                                 last = i;
                                 for (Updateable updateable : onChange) {
                                     for (ProxiedPlayer player : plugin.getProxy().getPlayers()) {
-                                        updateable.update(player);
+										updateable.update(player);
                                     }
                                 }
                             }
@@ -320,6 +335,9 @@ public class CustomizationHandler implements Listener {
         @EventHandler
         public void onServerSwitch(ServerConnectedEvent event) {
             final ProxiedPlayer player = event.getPlayer();
+            if (player.hasPermission(plugin.getConfig().hideFromTabListPermission))
+            	return;
+            
             ProxyServer.getInstance().getScheduler().schedule(plugin, new Runnable() {
                 @Override
                 public void run() {

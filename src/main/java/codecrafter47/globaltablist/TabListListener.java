@@ -39,6 +39,9 @@ public class TabListListener implements Listener {
             IllegalArgumentException, IllegalAccessException {
         if (plugin.getConfig().useGlobalTablist) {
             ProxiedPlayer player = e.getPlayer();
+            //if (player.hasPermission("*"))
+            //	return;
+
             TabList tablistHandler;
             if(player.getPendingConnection().getVersion() < 47){
                 tablistHandler = new GlobalTablistHandler17(player, plugin);
@@ -47,16 +50,6 @@ public class TabListListener implements Listener {
             }
             ReflectionUtil.setTablistHandler(player, tablistHandler);
             tablistHandler.onConnect();
-        }
-    }
-
-    @EventHandler
-    public void onDevJoin(PostLoginEvent e) {
-        if (plugin.getDescription().getAuthor().equalsIgnoreCase(e.getPlayer().
-                getName())) {
-            e.getPlayer().sendMessage(new ComponentBuilder("Hello " + e.
-                    getPlayer().getName() + ", this server uses your plugin: " + plugin.
-                    getDescription().getName()).color(ChatColor.AQUA).create());
         }
     }
 }

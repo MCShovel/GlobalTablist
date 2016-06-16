@@ -38,6 +38,7 @@ public class GlobalTablistHandler18 extends GlobalTablistHandlerBase {
     private final Collection<UUID> uuids = new HashSet<>();
     private final UUIDSet globalUUIDs = new UUIDSet();
     private static final Map<UUID, String> displayNames = new ConcurrentHashMap<>();
+    private static final Map<UUID, Boolean> hiddenUsers = new ConcurrentHashMap<>();
 
     public GlobalTablistHandler18(ProxiedPlayer player, GlobalTablist plugin) {
         super(player, plugin);
@@ -56,6 +57,9 @@ public class GlobalTablistHandler18 extends GlobalTablistHandlerBase {
         if (!plugin.getConfig().showPlayersOnOtherServersAsSpectators && playerListItem.getAction() == PlayerListItem.Action.UPDATE_GAMEMODE) {
             List<PlayerListItem.Item> itemList = new ArrayList<>();
             for (final PlayerListItem.Item item : playerListItem.getItems()) {
+            	if (hiddenUsers.containsKey(item.getUuid()))
+            		continue;
+            	
                 if (item.getUuid().equals(getPlayer().getUniqueId())) {
                     for (final GlobalTablistHandlerBase tablistHandler : tablistHandlers) {
                         if (tablistHandler instanceof GlobalTablistHandler18) {
@@ -81,7 +85,10 @@ public class GlobalTablistHandler18 extends GlobalTablistHandlerBase {
             if (plugin.getConfig().forwardDisplayNames) {
                 List<PlayerListItem.Item> itemList = new ArrayList<>();
                 for (final PlayerListItem.Item item : playerListItem.getItems()) {
-                    if (item.getUuid().equals(getPlayer().getUniqueId())) {
+                	if (hiddenUsers.containsKey(item.getUuid()))
+                		continue;
+                	
+                	if (item.getUuid().equals(getPlayer().getUniqueId())) {
                         displayNames.put(item.getUuid(), item.getDisplayName());
                         for (final GlobalTablistHandlerBase tablistHandler : tablistHandlers) {
                             if (tablistHandler instanceof GlobalTablistHandler18) {
@@ -149,6 +156,10 @@ public class GlobalTablistHandler18 extends GlobalTablistHandlerBase {
     @Override
     public void onServerChange() {
         failIfNotInEventLoop();
+        if (!isHidden && player.hasPermission(plugin.getConfig().hideFromTabListPermission)) {
+        	hiddenUsers.put(player.getUniqueId(), true);
+        	return;
+        }
 
         List<PlayerListItem.Item> removeList = new ArrayList<>();
         List<PlayerListItem.Item> gamemodeList = new ArrayList<>();
@@ -180,6 +191,11 @@ public class GlobalTablistHandler18 extends GlobalTablistHandlerBase {
     @Override
     void onGlobalPlayerConnect(ProxiedPlayer player) {
         failIfNotInEventLoop();
+        if (!isHidden && player.hasPermission(plugin.getConfig().hideFromTabListPermission)) {
+        	hiddenUsers.put(player.getUniqueId(), true);
+        	return;
+        }
+
         globalUUIDs.add(player.getUniqueId());
         PlayerListItem pli = new PlayerListItem();
         pli.setAction(PlayerListItem.Action.ADD_PLAYER);
@@ -221,6 +237,9 @@ public class GlobalTablistHandler18 extends GlobalTablistHandlerBase {
     @Override
     void onGlobalPlayerDisconnect(ProxiedPlayer player) {
         failIfNotInEventLoop();
+        if (!isHidden && player.hasPermission(plugin.getConfig().hideFromTabListPermission))
+        	return;
+
         globalUUIDs.remove(player.getUniqueId());
         if (uuids.contains(player.getUniqueId()) || globalUUIDs.contains(player.getUniqueId())) {
             return;
@@ -236,6 +255,11 @@ public class GlobalTablistHandler18 extends GlobalTablistHandlerBase {
     @Override
     void onGlobalPlayerPingChange(ProxiedPlayer player, int ping) {
         failIfNotInEventLoop();
+        if (!isHidden && player.hasPermission(plugin.getConfig().hideFromTabListPermission)) {
+        	hiddenUsers.put(player.getUniqueId(), true);
+        	return;
+        }
+
         if (uuids.contains(player.getUniqueId())) return;
         PlayerListItem pli = new PlayerListItem();
         pli.setAction(PlayerListItem.Action.UPDATE_LATENCY);
@@ -248,6 +272,11 @@ public class GlobalTablistHandler18 extends GlobalTablistHandlerBase {
 
     void onGlobalPlayerGamemodeChange(ProxiedPlayer player, int gamemode) {
         failIfNotInEventLoop();
+        if (!isHidden && player.hasPermission(plugin.getConfig().hideFromTabListPermission)) {
+        	hiddenUsers.put(player.getUniqueId(), true);
+        	return;
+        }
+
         PlayerListItem pli = new PlayerListItem();
         pli.setAction(PlayerListItem.Action.UPDATE_GAMEMODE);
         PlayerListItem.Item item = new PlayerListItem.Item();
@@ -259,6 +288,11 @@ public class GlobalTablistHandler18 extends GlobalTablistHandlerBase {
 
     void onGlobalPlayerDisplayNameChange(ProxiedPlayer player, String name) {
         failIfNotInEventLoop();
+        if (!isHidden && player.hasPermission(plugin.getConfig().hideFromTabListPermission)) {
+        	hiddenUsers.put(player.getUniqueId(), true);
+        	return;
+        }
+
         PlayerListItem pli = new PlayerListItem();
         pli.setAction(PlayerListItem.Action.UPDATE_DISPLAY_NAME);
         PlayerListItem.Item item = new PlayerListItem.Item();

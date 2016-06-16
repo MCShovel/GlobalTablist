@@ -81,6 +81,9 @@ public class MainConfig  {
     //        "on other servers show up in the teleport to list"
     public boolean showPlayersOnOtherServersAsSpectators = true;
 
+    //        "Users with this permission will be hidden from the tab list"
+    public String hideFromTabListPermission = "globaltablist.hidden";
+
     //        "On 1.7 clients this replaces the missing header and footer.",
     //        "You can add some custom text slots at the top of the player list"
     public List<String> custom_lines_top = Arrays.asList("&6Welcome", "&6{player}", "&6to our server", "", "", "");
@@ -100,6 +103,7 @@ public class MainConfig  {
 			this.showPlayersOnOtherServersAsSpectators = config.getBoolean("showPlayersOnOtherServersAsSpectators", this.showPlayersOnOtherServersAsSpectators);
 			this.useGlobalTablist = config.getBoolean("useGlobalTablist", this.useGlobalTablist);
 			this.custom_lines_top = (List<String>) config.getList("custom_lines_top", this.custom_lines_top);
+			this.hideFromTabListPermission = config.getString("hideFromTabListPermission", this.hideFromTabListPermission);
 		}
 	}
 
@@ -116,6 +120,7 @@ public class MainConfig  {
 			config.set("showPlayersOnOtherServersAsSpectators", this.showPlayersOnOtherServersAsSpectators);
 			config.set("useGlobalTablist", this.useGlobalTablist);
 			config.set("custom_lines_top", this.custom_lines_top);
+			config.set("hideFromTabListPermission", this.hideFromTabListPermission);
 			ConfigurationProvider.getProvider(YamlConfiguration.class).save(config, file);
 		}
 	}

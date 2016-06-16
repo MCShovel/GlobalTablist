@@ -36,11 +36,13 @@ public abstract class GlobalTablistHandlerBase extends TabList {
 
     protected int lastPing = 0;
     protected boolean connected = false;
+    public final boolean isHidden;
 
     protected static Set<GlobalTablistHandlerBase> tablistHandlers = Collections.synchronizedSet(new THashSet<GlobalTablistHandlerBase>());
 
     public GlobalTablistHandlerBase(ProxiedPlayer player, GlobalTablist plugin) {
         super(player);
+        this.isHidden = player.hasPermission(plugin.getConfig().hideFromTabListPermission);
         this.plugin = plugin;
     }
 
