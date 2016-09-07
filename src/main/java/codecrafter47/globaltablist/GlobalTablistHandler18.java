@@ -201,7 +201,7 @@ public class GlobalTablistHandler18 extends GlobalTablistHandlerBase {
         pli.setAction(PlayerListItem.Action.ADD_PLAYER);
         PlayerListItem.Item item = new PlayerListItem.Item();
         item.setPing(player.getPing());
-        item.setUsername(player.getName());
+        item.setUsername(player.getDisplayName());
         item.setGamemode(uuids.contains(player.getUniqueId()) || !plugin.getConfig().showPlayersOnOtherServersAsSpectators ? ((UserConnection) player).getGamemode() : 3);
         item.setUuid(player.getUniqueId());
         item.setProperties(new String[0][0]);
