@@ -18,10 +18,15 @@
  */
 package codecrafter47.globaltablist;
 
+import java.util.ArrayList;
+
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PostLoginEvent;
+import net.md_5.bungee.api.event.ProxyPingEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.tab.TabList;
@@ -51,5 +56,30 @@ public class TabListListener implements Listener {
             ReflectionUtil.setTablistHandler(player, tablistHandler);
             tablistHandler.onConnect();
         }
+    }
+    
+    @EventHandler(priority = Byte.MAX_VALUE)
+    public void onProxyPing(ProxyPingEvent e) {
+    	
+    	int hidden = 0;
+    	ArrayList<ServerPing.PlayerInfo> online = new ArrayList<ServerPing.PlayerInfo>();
+    	
+    	for (ProxiedPlayer pp : ProxyServer.getInstance().getPlayers()) {
+    		if (pp.hasPermission(plugin.getConfig().hideFromTabListPermission)) {
+    			hidden += 1;
+    		}
+    		else if (online.size() < 10) {
+    			online.add(new ServerPing.PlayerInfo(pp.getDisplayName(), pp.getUniqueId()));
+    		}
+    	}
+    	if (hidden > 0) {
+	    	e.getResponse().getPlayers().setOnline(
+	    			Math.max(0, e.getResponse().getPlayers().getOnline() - hidden)
+	    			);
+    	}
+    	
+    	ServerPing.PlayerInfo[] arrOnline = new ServerPing.PlayerInfo[online.size()];
+    	arrOnline = online.toArray(arrOnline);
+    	e.getResponse().getPlayers().setSample(arrOnline);
     }
 }
